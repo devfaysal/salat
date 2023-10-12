@@ -15,6 +15,23 @@
                 background-position-y: top; 
                 background-position-x: center; 
             }
+            .swiper-button-prev{
+                left: 40px!important;
+            }
+            .swiper-button-next{
+                right:40px!important;
+            }
+            .swiper-button-prev,
+            .swiper-button-next{
+                top:29px!important;
+            }
+            .swiper-button-prev::after,
+            .swiper-button-next::after{
+                font-size: 20px!important;
+                font-weight: 900!important;
+                color: #000!important;
+            }
+
         </style>
 <link
   rel="stylesheet"
@@ -22,27 +39,23 @@
 />
 
     </head>
-    <body>
-        <main class="min-h-screen max-w-lg mx-auto bg-gray-200">
+    <body class="bg-orange-50">
+        <main class="min-h-screen max-w-md mx-auto bg-gray-200">
             {{ $slot }}
-            <!-- Slider main container -->
-{{-- <div class="swiper">
-  <!-- Additional required wrapper -->
-  <div class="swiper-wrapper">
-    <!-- Slides -->
-    <div class="swiper-slide">Slide 1</div>
-    <div class="swiper-slide">Slide 2</div>
-    <div class="swiper-slide">Slide 3</div>
-    ...
-  </div>
-
-</div> --}}
-
         </main>
         <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", () => {
-                const swiper = new Swiper('.swiper');
+                const swiper = new Swiper('.swiper',{
+                     navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    initialSlide: {{ date('d') -1 }},
+                    spaceBetween: 15,
+                    centeredSlides: true,
+                    slidesPerView: 1.2
+                });
             });
         </script>
     </body>
