@@ -1,30 +1,27 @@
 <?php
 
-use App\Models\Time;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    $time = Time::query()
-        ->where('city', 'Kishoreganj')
-        ->where('month', date('m'))
-        ->first();
-    if ($time) {
-        $times = $time->data;
+    $city = cache()->get('settings.city');
+    $method = cache()->get('settings.method');
+    $school = cache()->get('settings.school');
+    $timesKey = 'times' . '-' . $city . '-' . $method . '-' . $school;
+    if (cache()->has($timesKey)) {
+        $times = cache()->get($timesKey);
     } else {
-        $url = 'http://api.aladhan.com/v1/calendarByCity/' . date('Y/m');
+        $url = 'http://api.aladhan.com/v1/calendarByCity/'.date('Y/m');
         $response = Http::get($url, [
-            'city' => 'Kishoreganj',
+            'city' => $city,
             'country' => 'Bangladesh',
-            'method' => 4,
-            'school' => 1,
+            'method' => $method,
+            'school' => $school,
         ]);
         $times = $response->object()->data;
-        // Time::create([
-        //     'city' => 'Kishoreganj',
-        //     'month' => date('m'),
-        //     'data' => $times,
-        // ]);
+        cache()->put($timesKey, $times);
     }
+
     // dd($times);
     return view('home', [
         'times' => $times,
